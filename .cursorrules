@@ -1,0 +1,556 @@
+# Smart Class Allocation System
+## Project Overview, Requirements, System Design and Implementation Plan
+
+### 1. Project Overview
+
+The **Smart Class Allocation System** is a software application designed to help colleges identify available classrooms and allocate them efficiently to students, faculty members, and academic batches during a particular time slot.
+
+In a college with multiple branches, academic years, classrooms, and lecture schedules, finding a suitable vacant classroom can be challenging. A classroom might be occupied by a scheduled lecture, reserved for a practical session, or unavailable due to an event. Manually checking timetables and coordinating with faculty members can be time-consuming and inefficient.
+
+The proposed application centralizes classroom information, academic timetables, room availability, and allocation requests in one system. It determines which classrooms are free for the entire requested duration and recommends a suitable room based on predefined rules and constraints.
+
+The application uses a **rule-based scheduling and allocation approach**. It relies on timetable data, classroom information, reservations, and user inputs rather than machine learning or predictive models.
+
+### 2. Problem Statement
+
+Colleges often face difficulties managing classroom availability when lectures are cancelled, schedules change, additional sessions are required, or students need a classroom for group study, project work, presentations, or academic activities.
+
+Traditional classroom allocation methods may involve manually checking timetables, contacting faculty members, or asking administrative staff to identify vacant rooms. This process can result in delays, scheduling conflicts, underutilization of classrooms, and inefficient communication.
+
+There is a need for a centralized system that can identify available classrooms for a specific date and time, verify their suitability, and allocate the most appropriate classroom without conflicting with existing schedules or reservations.
+
+The Smart Class Allocation System aims to solve this problem through automated timetable checking, availability management, and constraint-based classroom allocation.
+
+### 3. Aim of the Project
+
+To develop a smart, centralized classroom management application that identifies available classrooms and allocates suitable rooms to academic batches or authorized users based on timetables, room capacity, facilities, and scheduling constraints.
+
+### 4. Objectives
+
+The primary objectives of the application are:
+
+1. Maintain a centralized database of classrooms, timetables, branches, academic years, and room facilities.
+2. Identify classrooms that remain unoccupied throughout a requested time interval.
+3. Display available classrooms according to the selected date, time slot, and other requirements.
+4. Automatically recommend a suitable classroom using predefined allocation rules.
+5. Prevent double bookings and overlapping classroom allocations.
+6. Support timetable updates, lecture cancellations, room changes, and special reservations.
+7. Maintain records of classroom bookings, cancellations, and allocation history.
+8. Improve classroom utilization by selecting rooms that meet users' requirements without unnecessarily occupying larger rooms.
+9. Provide a simple interface for students, faculty members, and administrators to access relevant classroom information.
+
+### 5. College Structure and Scope
+
+The application is initially designed for a degree college with four academic branches:
+
+- Information Technology (IT)
+- Computer Science and Engineering (CSE)
+- Civil Engineering (CE)
+- Artificial Intelligence and Machine Learning (AIM)
+
+Each branch contains four academic years:
+
+- First Year (FY)
+- Second Year (SY)
+- Third Year (TY)
+- Fourth Year
+
+This gives the system 16 branch-year combinations to manage.
+
+For example, a user may want to find an available classroom for SY IT students on a particular day from 2:00 PM to 3:00 PM.
+
+The system will examine the relevant timetables and existing reservations, identify rooms that are free for the complete duration, and recommend a suitable classroom.
+
+The system should also support classroom requests for project work, group discussions, faculty-led sessions, presentations, and other authorized academic activities.
+
+The number of classrooms, their capacities, and their facilities will be configurable according to the actual college infrastructure.
+
+### 6. Core Features
+
+#### 6.1 Classroom Management
+
+The application maintains a record of every classroom available for allocation.
+
+Each classroom record may contain:
+
+- Unique classroom ID
+- Classroom name or room number
+- Building and floor
+- Seating capacity
+- Room type, such as lecture hall, laboratory, or seminar room
+- Available equipment, such as projectors, smart boards, and computers
+- Availability or maintenance status
+- Restrictions on room usage
+
+The administrator can add new classrooms, update their details, mark rooms unavailable for maintenance, and remove rooms that are no longer in use.
+
+#### 6.2 Timetable Management
+
+The timetable module stores scheduled lectures, laboratory sessions, and other academic activities.
+
+Each timetable entry should include:
+
+- Branch
+- Academic year
+- Subject or activity
+- Faculty member, where applicable
+- Assigned classroom
+- Date or applicable weekday
+- Start time
+- End time
+- Schedule status
+
+The application uses this information to determine whether a classroom is already occupied during the requested period.
+
+Timetable updates should be reflected in the availability results so that the system does not continue treating a room as occupied after a confirmed cancellation or room change.
+
+#### 6.3 Classroom Availability Checker
+
+This is one of the central features of the application.
+
+The user selects a date, start time, end time, and optionally a branch, academic year, room type, minimum seating capacity, or required facilities.
+
+The system checks every eligible classroom against the timetable and reservation database.
+
+A classroom is considered available only when:
+
+- No scheduled class overlaps with the requested interval.
+- No confirmed reservation overlaps with the requested interval.
+- The classroom is not marked unavailable for maintenance or another restriction.
+- The room satisfies the user's capacity and facility requirements.
+- The room is free for the entire requested duration.
+
+For example, if a classroom is free from 2:00 PM to 2:30 PM but has a lecture scheduled from 2:30 PM to 3:30 PM, it cannot be allocated for a request from 2:00 PM to 3:00 PM.
+
+The system must check the complete interval, not merely whether the room is vacant at the start time.
+
+#### 6.4 Smart Classroom Allocation
+
+After identifying available classrooms, the application recommends the most suitable option using a rule-based allocation algorithm.
+
+The allocation process considers:
+
+1. **Availability:** The room must be free for the complete requested interval.
+2. **Capacity:** The room must accommodate the expected number of students.
+3. **Facilities:** The room must provide any required equipment or infrastructure.
+4. **Room restrictions:** The room must be authorized for the intended activity.
+5. **Existing reservations:** The allocation must not conflict with another booking.
+6. **Space efficiency:** Prefer a room that accommodates the group without unnecessarily wasting seating capacity.
+7. **Location preference:** Where possible, consider the preferred building, floor, or proximity to the relevant academic department.
+
+The system first eliminates all rooms that violate mandatory requirements. It then ranks the remaining suitable rooms according to the allocation rules.
+
+If several classrooms are equally suitable, the system may select the one with the smallest adequate capacity or apply another configured tie-breaking rule.
+
+If no suitable classroom is available, the application should display a clear message instead of making an invalid allocation.
+
+#### 6.5 Booking and Reservation Management
+
+Authorized users can request or reserve a classroom for a specific time period.
+
+A booking record should include:
+
+- Booking ID
+- Requested classroom
+- Requesting user or department
+- Purpose of the booking
+- Date and time interval
+- Number of expected occupants
+- Required facilities
+- Booking status
+- Creation timestamp
+
+Depending on the college's policies, bookings may require administrator approval or may be confirmed automatically after all validation checks pass.
+
+The system should support booking cancellation, reservation updates, and status tracking.
+
+#### 6.6 Timetable Changes and Unexpected Availability
+
+The application must handle changes that affect classroom availability without using predictive features.
+
+Examples include:
+
+- A lecture being cancelled.
+- A faculty member changing the scheduled classroom.
+- A practical session being rescheduled.
+- A classroom being temporarily closed.
+- An event requiring a room reservation.
+- A class being moved to another available classroom.
+
+When an authorized administrator updates the schedule, the system recalculates availability using the updated information.
+
+For instance, if a lecture scheduled in Room A is officially cancelled, the room can become available for allocation during that period, provided there are no other conflicting reservations or restrictions.
+
+Importantly, the application does not independently predict whether a class will be cancelled or whether a classroom will become vacant. It recognizes only recorded and authorized changes.
+
+### 7. User Roles
+
+#### 7.1 Administrator
+
+The administrator has control over the overall system.
+
+Responsibilities include:
+
+- Managing classrooms and facilities.
+- Creating and updating timetables.
+- Recording cancellations and schedule changes.
+- Managing users and permissions.
+- Approving or rejecting booking requests.
+- Managing maintenance periods and special reservations.
+- Viewing booking history and classroom utilization reports.
+
+#### 7.2 Faculty Members
+
+Faculty members can access classroom information relevant to their responsibilities.
+
+Depending on the permissions provided, they may:
+
+- Check available classrooms.
+- Request rooms for additional lectures or academic activities.
+- View their assigned timetable.
+- Submit requests for schedule or room changes.
+- View the status of their reservations.
+
+#### 7.3 Students
+
+Students can use the application to find suitable classrooms for authorized academic activities.
+
+Possible functions include:
+
+- Searching for available classrooms.
+- Filtering rooms by date, time, capacity, and facilities.
+- Requesting a classroom for project work or group study.
+- Viewing the status of their booking requests.
+- Cancelling eligible reservations.
+
+The system should restrict student access to administrative functions and prevent unauthorized timetable changes.
+
+### 8. System Workflow
+
+The application follows a straightforward workflow:
+
+**Step 1: User selects requirements.**
+
+The user enters the date, requested start and end times, expected number of occupants, and any additional requirements.
+
+**Step 2: System retrieves classroom information.**
+
+It retrieves the list of active classrooms, their capacities, facilities, restrictions, timetables, and existing reservations.
+
+**Step 3: System checks availability.**
+
+Each classroom is checked for timetable conflicts, reservation overlaps, maintenance restrictions, and other unavailability conditions.
+
+**Step 4: System filters unsuitable classrooms.**
+
+Rooms that are occupied, too small, improperly equipped, or otherwise restricted are excluded.
+
+**Step 5: System ranks eligible classrooms.**
+
+The remaining rooms are ranked using predefined allocation rules.
+
+**Step 6: System displays recommendations.**
+
+The application displays suitable classrooms with details such as room number, capacity, facilities, and available time interval.
+
+**Step 7: User selects a classroom or requests allocation.**
+
+The user selects a recommended room, or the system selects the highest-ranked eligible room according to the applicable booking policy.
+
+**Step 8: System validates the allocation again.**
+
+Before confirming the booking, the application checks availability again to prevent conflicts caused by another booking or timetable change.
+
+**Step 9: System records the allocation.**
+
+The booking is stored in the database and its status is updated.
+
+**Step 10: System updates availability.**
+
+The newly confirmed reservation is included in subsequent availability checks.
+
+### 9. Rule-Based Allocation Algorithm
+
+The application uses a deterministic, constraint-based algorithm rather than a machine learning model.
+
+**Input:**
+- Requested date
+- Start time and end time
+- Expected number of occupants
+- Required facilities
+- Optional branch, building, or room-type preferences
+
+**Processing:**
+
+1. Retrieve all active classrooms.
+2. Remove classrooms that are closed, under maintenance, or restricted.
+3. Check whether each classroom has a scheduled activity overlapping the requested interval.
+4. Check whether each classroom has a confirmed reservation overlapping the requested interval.
+5. Remove classrooms that fail capacity, room-type, or facility requirements.
+6. Rank the remaining classrooms based on seating efficiency and configured preferences.
+7. Display the ranked list of suitable classrooms.
+8. Revalidate the selected room before confirming the booking.
+9. Store the booking and update the room's availability records.
+
+**Output:**
+
+A list of suitable available classrooms, ranked by the allocation rules, or a message indicating that no eligible classroom is available.
+
+The algorithm can be implemented using conventional programming logic, database queries, and scheduling rules. It does not require model training, training datasets, feature engineering, or model inference.
+
+### 10. Handling Time Conflicts
+
+The system must detect overlapping time intervals accurately.
+
+For a requested interval from 2:00 PM to 3:00 PM, a scheduled activity conflicts with the request if it starts before 3:00 PM and ends after 2:00 PM.
+
+A general overlap condition is:
+
+`ExistingStart < RequestedEnd AND ExistingEnd > RequestedStart`
+
+This condition allows consecutive bookings when one activity ends exactly when the next begins, provided the college permits back-to-back usage and does not require a buffer period.
+
+If a buffer is required for room preparation or movement between sessions, the system can incorporate that rule into its conflict checks.
+
+The database should also enforce booking integrity so that simultaneous requests cannot reserve the same room for overlapping intervals.
+
+### 11. Proposed Database Design
+
+The following tables provide a starting point for the relational database.
+
+**A. Branches**
+
+Stores the academic branches.
+
+Fields:
+- branch_id (Primary Key)
+- branch_name
+- branch_code
+
+**B. AcademicYears**
+
+Stores the academic years.
+
+Fields:
+- year_id (Primary Key)
+- year_name
+
+Example records: FY, SY, TY, Fourth Year.
+
+**C. Classrooms**
+
+Stores room details.
+
+Fields:
+- room_id (Primary Key)
+- room_number
+- building
+- floor
+- capacity
+- room_type
+- status
+
+**D. Facilities**
+
+Stores the facilities available in the college.
+
+Fields:
+- facility_id (Primary Key)
+- facility_name
+
+**E. ClassroomFacilities**
+
+Connects classrooms to their facilities.
+
+Fields:
+- room_id (Foreign Key)
+- facility_id (Foreign Key)
+
+This allows each classroom to have multiple facilities.
+
+**F. Timetable**
+
+Stores scheduled academic activities.
+
+Fields:
+- timetable_id (Primary Key)
+- branch_id (Foreign Key, where applicable)
+- year_id (Foreign Key, where applicable)
+- subject_name
+- faculty_id (where applicable)
+- room_id (Foreign Key)
+- activity_date or weekday
+- start_time
+- end_time
+- status
+
+Recurring weekly schedules and date-specific timetable changes should be represented clearly so the system can determine the effective schedule for a requested date.
+
+**G. Users**
+
+Stores registered users.
+
+Fields:
+- user_id (Primary Key)
+- name
+- email
+- role
+- department or branch, where applicable
+
+**H. Bookings**
+
+Stores classroom requests and reservations.
+
+Fields:
+- booking_id (Primary Key)
+- room_id (Foreign Key)
+- user_id (Foreign Key)
+- booking_date
+- start_time
+- end_time
+- expected_occupants
+- purpose
+- status
+- created_at
+
+**I. RoomRestrictions**
+
+Stores periods when classrooms cannot be allocated.
+
+Fields:
+- restriction_id (Primary Key)
+- room_id (Foreign Key)
+- start_datetime
+- end_datetime
+- reason
+- status
+
+This structure can be expanded to support events, approvals, notifications, and booking history as the application develops.
+
+### 12. Proposed Technology Stack
+
+The following is a possible implementation stack for the project.
+
+**Frontend**
+- HTML and CSS with JavaScript, or React.js for a more interactive web interface.
+- Responsive layouts for desktop and mobile users.
+
+**Backend**
+- Python with Flask or FastAPI.
+- REST APIs to handle classroom searches, timetable queries, booking requests, and administrative updates.
+
+**Database**
+- PostgreSQL or MySQL.
+- Relational tables with primary keys, foreign keys, constraints, and appropriate indexes.
+
+**Development and testing**
+- Google Colab may be used for initial Python experiments or testing individual scheduling functions.
+- Visual Studio Code can be used for developing the complete application.
+- Git and GitHub can be used for version control.
+
+Google Colab is suitable for initial logic testing, but a complete multi-user application will generally need a persistent database and a running backend service.
+
+This technology stack is a proposal; the final choices can be made based on implementation requirements.
+
+### 13. Functional Requirements
+
+The application must:
+
+1. Allow authorized administrators to manage classrooms and their facilities.
+2. Store and retrieve academic timetables.
+3. Search for available classrooms by date and time.
+4. Check complete time intervals for scheduling conflicts.
+5. Filter rooms according to capacity, facilities, and restrictions.
+6. Rank suitable classrooms using allocation rules.
+7. Create, update, approve, and cancel bookings according to user permissions.
+8. Update availability when confirmed schedule changes occur.
+9. Prevent overlapping confirmed bookings for the same classroom.
+10. Display appropriate messages when no room satisfies the requirements.
+11. Maintain booking records and relevant administrative history.
+
+### 14. Non-Functional Requirements
+
+**Accuracy:** Availability results should reflect the latest recorded timetables and reservations.
+
+**Reliability:** The application should prevent conflicting allocations even when multiple users request rooms simultaneously.
+
+**Performance:** Classroom searches should return results efficiently as the number of classrooms and bookings grows.
+
+**Security:** User authentication and role-based access control should protect administrative operations.
+
+**Usability:** The interface should be simple enough for students, faculty, and administrators to use without extensive training.
+
+**Maintainability:** Timetable rules, room facilities, capacities, and allocation preferences should be configurable without rewriting the entire application.
+
+**Scalability:** The database design should allow additional branches, academic years, buildings, and classrooms to be added later.
+
+### 15. Expected Outcomes
+
+The completed system is expected to:
+
+- Reduce the time spent manually searching for vacant classrooms.
+- Make classroom availability information accessible from a centralized application.
+- Reduce double bookings and scheduling conflicts.
+- Improve the use of existing classroom infrastructure.
+- Simplify the process of arranging additional lectures and academic activities.
+- Make timetable changes easier to manage.
+- Provide transparent and consistent classroom allocation decisions.
+- Maintain a clear record of reservations and classroom usage.
+
+### 16. Project Scope and Limitations
+
+The first version will focus on timetable-based availability, recorded schedule changes, room restrictions, and rule-based allocation.
+
+The system can recognize unexpected availability when an authorized user records a cancellation, rescheduling, or other change. It cannot independently know that a lecture has been cancelled unless the change is entered into the system or supplied by an integrated, authoritative timetable source.
+
+The application will not use machine learning, artificial intelligence-based occupancy prediction, sensor-based occupancy inference, or predictive analytics. Its decisions will be based on available database records and predefined rules.
+
+Actual classroom availability will depend on the completeness and accuracy of the information maintained by the college.
+
+### 17. Implementation Roadmap
+
+**Phase 1: Requirements and data preparation**
+- Identify the classrooms and facilities in the college.
+- Define the branch and academic-year structure.
+- Prepare sample classroom and timetable records.
+- Finalize the database schema.
+
+**Phase 2: Availability logic**
+- Implement timetable retrieval.
+- Write the time-overlap checking logic.
+- Test classroom availability for different dates and durations.
+- Handle cancellations, maintenance periods, and existing reservations.
+
+**Phase 3: Allocation algorithm**
+- Implement capacity and facility filters.
+- Rank eligible rooms using predefined rules.
+- Handle cases where no suitable room exists.
+- Test the algorithm with multiple classroom requests.
+
+**Phase 4: Backend and database**
+- Create the database tables.
+- Develop APIs for classroom searches and bookings.
+- Implement booking validation and access permissions.
+
+**Phase 5: Frontend**
+- Build the classroom search interface.
+- Display available rooms and their details.
+- Add booking forms and booking status pages.
+- Create administrative timetable and classroom management screens.
+
+**Phase 6: Testing and deployment**
+- Test overlapping and consecutive time slots.
+- Test concurrent booking requests.
+- Verify timetable updates and cancellations.
+- Test access permissions and invalid inputs.
+- Deploy the application for demonstration or pilot use.
+
+### 18. Conclusion
+
+The Smart Class Allocation System provides a practical solution for managing classroom availability in a multi-branch engineering college. By combining timetable management, reservation tracking, availability checking, and rule-based allocation, it can identify suitable classrooms and reduce manual coordination.
+
+The project's main strength is its clear, explainable allocation process. Every recommendation can be traced to the classroom's recorded schedule, capacity, facilities, restrictions, and existing bookings.
+
+The proposed system can be developed incrementally, beginning with the database and availability-checking logic and progressing toward a complete web application with booking and administration features.
+
+The final objective is to make classroom allocation more efficient, reliable, transparent, and convenient for the college community.
