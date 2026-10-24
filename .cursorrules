@@ -554,3 +554,4 @@ The project's main strength is its clear, explainable allocation process. Every 
 The proposed system can be developed incrementally, beginning with the database and availability-checking logic and progressing toward a complete web application with booking and administration features.
 
 The final objective is to make classroom allocation more efficient, reliable, transparent, and convenient for the college community.
+Follow the rules and schema in docs/step2_rules_and_schema.md. Rule-based only: no machine learning or prediction.
