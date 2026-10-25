@@ -54,3 +54,33 @@
 3. If moved to another room on one date, the original room is free and the new room is busy on that date.
 4. A room under maintenance is blocked by room_restrictions, not by the timetable.
 5. A student request is saved as pending and does not block other users.
+
+## Section 6: Decisions made while building the database (Step 3)
+
+Database files, run in this order in the Supabase SQL Editor:
+- supabase/001_create_tables.sql (11 tables, row level security enabled)
+- supabase/002_add_constraints.sql (integrity rules)
+- supabase/003_seed_reference_and_sample_rooms.sql
+- supabase/004_seed_sample_schedule.sql
+- supabase/005_test_constraints.sql (tests; rolls back, saves nothing)
+
+Schema decisions:
+- timetable_exceptions.reason is required (an admin must give a reason)
+- timetable.faculty_id is required
+- profiles.branch_id may be empty (admins have no branch)
+- Pending, rejected and cancelled bookings never block a room; only confirmed bookings do
+- The database blocks overlapping confirmed bookings in the same room on the same date. Time ranges are half-open [start, end), so back-to-back bookings are allowed
+- The database does NOT compare bookings with timetable lectures or room restrictions. That cross-check belongs to the availability engine (Step 4)
+- Time zone for room_restrictions: Asia/Kolkata (+05:30)
+
+Extra constraints beyond the original list:
+- Unique: (building, room_number), branch code, year_number, and one exception per timetable entry per date
+- Booking times must be between 08:00 and 18:00, in 30-minute steps
+
+Sample data rules (delete before loading real college data):
+- Sample rooms use building = 'SAMPLE'
+- Sample timetable, exception, restriction and booking text starts with '[SAMPLE]'
+- Test users: admin.test@example.com, faculty.test@example.com, student.test@example.com (no passwords stored in the project)
+- Real reference data to keep: branches, academic_years, facilities
+
+Availability logic location (decided at Step 4): to be recorded here.
